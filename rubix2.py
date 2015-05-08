@@ -3,6 +3,7 @@ __author__ = 'Benjamin Jakobus'
 import networkx as nx
 import random
 import copy
+import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
 COLORS = ['white', 'red', 'blue', 'orange', 'green', 'yellow']
@@ -10,8 +11,6 @@ COLORS = ['white', 'red', 'blue', 'orange', 'green', 'yellow']
 # Movement directions
 RIGHT       = 'right'
 UP          = 'up'
-GROUP_RIGHT = 'group_r'
-GROUP_UP    = 'group_u'
 
 # Indexes
 FRONT       = 0
@@ -59,9 +58,9 @@ def generate_successor_states(state):
     states = []
     # Apply all possible movements
     for i in range(0, 3):
+        # For each row and column, apply right movement and up movement
         states.append(apply_movement(state, RIGHT, i))
         # states.append(apply_movement(state, UP, i))
-        #TODO: Do the same for up and group movements
 
     return states
 
@@ -100,25 +99,40 @@ def apply_movement(state, movement, index):
     # Create a deep copy of the state to which the movement is to be applied
     new_state = copy.deepcopy(state)
     if movement is RIGHT:
+        # Moving the middle row of the cube
         new_state[FRONT][index] = state[LEFT][index]
         new_state[RIGHT][index] = state[FRONT][index]
         new_state[BACK][index] = state[RIGHT][index]
         new_state[LEFT][index] = state[BACK][index]
+        if index is 0:
+            # Moving the top row of the cube. This means that we also need to
+            # rotate the elements in the TOP
+            numpy_array = np.array(new_state[TOP])
+            new_state[TOP] = np.rot90(numpy_array, 1).tolist()
+        elif index is 2:
+            # Moving the bottom row of the cube. This means that we also need to
+            # rotate the elements in the BOTTOM
+            numpy_array = np.array(new_state[BOTTOM])
+            new_state[BOTTOM] = np.rot90(numpy_array, 1).tolist()
     elif movement is UP:
         for i in range(0, 3):
             new_state[TOP][i][index] =  state[FRONT][i][index]
             new_state[BACK][i][index] =  state[TOP][i][index]
             new_state[BOTTOM][i][index] =  state[BACK][i][index]
             new_state[FRONT][i][index] =  state[BOTTOM][i][index]
-    elif movement is GROUP_RIGHT:
-        None
-    elif movement is GROUP_UP:
-        None
-
+        if index is 0:
+            # Moving the outer side of the cube...So, need to rotate left
+            numpy_array = np.array(new_state[LEFT])
+            new_state[LEFT] = np.rot90(numpy_array, 1).tolist()
+        elif index is 2:
+            # Moving the outer side of the cube...So, need to rotate right
+            numpy_array = np.array(new_state[RIGHT])
+            new_state[RIGHT] = np.rot90(numpy_array, 1).tolist()
     return new_state
 
-
+print 'Generating graph...'
 G = generate_graph(create_random_state())
 
-nx.draw(G,with_labels=False)
+nx.draw(G, with_labels=False)
 plt.show()
+
