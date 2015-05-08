@@ -6,6 +6,8 @@ import copy
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
+from rubix_viz import *
+from matplotlib import *
 COLORS = ['white', 'red', 'blue', 'orange', 'green', 'yellow']
 
 # Movement directions
@@ -20,12 +22,6 @@ LEFT        = 3
 RIGHT       = 4
 TOP         = 5
 
-# def convert_to_tuple(state):
-#     tuples = []
-#     for side in state:
-#         tuples.append((tuple(side[0]), tuple(side[1]), tuple(side[2])))
-
-    # return tuple(tuples)
 
 def generate_graph(state):
     stack = deque()
@@ -33,8 +29,6 @@ def generate_graph(state):
     G = nx.Graph()
     while stack:
         state = stack.pop()
-        # state_tuple = tuple(tuple(l) for l in state)
-        # state_tuple = convert_to_tuple(state)
 
         if G.has_node(str(state)) is not True:
             G.add_node(str(state))
@@ -42,7 +36,6 @@ def generate_graph(state):
         states = generate_successor_states(state)
 
         for successor in states:
-            # successor_tuple = convert_to_tuple(successor)
             if G.has_node(str(successor)):
                 G.add_edge(str(successor), str(state))
                 continue
@@ -60,7 +53,6 @@ def generate_successor_states(state):
     for i in range(0, 3):
         # For each row and column, apply right movement and up movement
         states.append(apply_movement(state, RIGHT, i))
-        # states.append(apply_movement(state, UP, i))
 
     return states
 
@@ -131,8 +123,31 @@ def apply_movement(state, movement, index):
     return new_state
 
 print 'Generating graph...'
-G = generate_graph(create_random_state())
+# G = generate_graph(create_random_state())
+#
+# nx.draw(G, with_labels=False)
+# plt.show()
 
-nx.draw(G, with_labels=False)
-plt.show()
 
+# Cublet test
+state_1 = create_random_state()
+state_2 = apply_movement(state_1, UP, 0)
+
+# Display the first cublet of state 1
+fig1 = plt.figure(figsize=(4, 4))
+print state_1
+cublet1 = [state_1[FRONT][0][0], state_1[BACK][0][0], state_1[TOP][0][0], state_1[BOTTOM][0][0], state_1[RIGHT][0][0], state_1[LEFT][0][0]]
+print cublet1
+ax1 = CubeAxes(cublet1, fig1)
+fig1.add_axes(ax1)
+ax1.draw_cube()
+plt.savefig('1.png')
+
+fig2 = plt.figure(figsize=(4, 4))
+print state_2
+cublet2 = [state_2[FRONT][0][0], state_2[BACK][0][0], state_2[TOP][0][0], state_2[BOTTOM][0][0], state_2[RIGHT][0][0], state_2[LEFT][0][0]]
+print cublet2
+ax2 = CubeAxes(cublet2, fig2)
+fig2.add_axes(ax2)
+ax2.draw_cube()
+plt.savefig('2.png')
