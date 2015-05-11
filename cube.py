@@ -53,11 +53,17 @@ class RubiksCube(object):
         return matrix
 
 
-def move_rubiks_cube(rubiks_cube, face, clockwise=True):
+def move_rubiks_cube(rubiks_cube, face):
     """
     Returns a new RubiksCube with the face rotated.
+    Input face can be a value between 0 and 11 (all possible movements)
     """
-    cube = _move_cubes_face(rubiks_cube.cube, face, clockwise)
+    cube = None
+    if face <= 5:
+        cube = _move_cubes_face(rubiks_cube.cube, face, True)
+    else:
+        _face = face - 6
+        cube = _move_cubes_face(rubiks_cube.cube, _face, False)
     return RubiksCube(cube)
 
 
