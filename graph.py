@@ -10,9 +10,18 @@ from cube import move_rubiks_cube
 class Node(object):
 
     def __init__(self, rubiks_cube, mov, parent_mov):
+        """ Constructor
+
+            Args:
+                rubiks_cube     The rubik's cube to which this node belongs
+                mov             The movement that this node represents
+                parent_mov      The parent's movement
+        """
         self.rubiks_cube = rubiks_cube
         self.mov = mov
         self.parent_mov = parent_mov
+        # Parent node
+        self.parent = None
 
 
 class RCGraph(object):
@@ -27,7 +36,7 @@ class RCGraph(object):
         Returns the node adjacent list
         """
         nodes = self._get_possible_adjacents(node)
-        while(not self._is_validate_adjacents(nodes)):
+        while(not self._is_valid_adjacents(nodes)):
             nodes = self._get_possible_adjacents(node)
         for n in nodes:
             self._add_node(n, node)
@@ -52,7 +61,7 @@ class RCGraph(object):
 
         return [Node(move_rubiks_cube(node.rubiks_cube, m), m, node.mov) for m in moves]
 
-    def _is_validate_adjacents(self, nodes):
+    def _is_valid_adjacents(self, nodes):
         """
         Checks if the generated adjacents is valid,
         the list of nodes will be valid if it none of its nodes already exist \
