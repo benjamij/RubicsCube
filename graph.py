@@ -38,8 +38,11 @@ class RCGraph(object):
         """ Returns the node adjacent list
 
             Args:
-                node        Node instance for which to generate possible
+                node        Node instance for which to generate the
                             successor states.
+
+            Return:
+                List of adjacent nodes.
         """
         nodes = self._get_possible_adjacents(node)
         while(not self._is_valid_adjacents(nodes)):
@@ -49,8 +52,15 @@ class RCGraph(object):
         return nodes
 
     def _get_possible_adjacents(self, node):
-        """
-            Returns a possible list of adjacents.
+        """ Returns a possible list of adjacents. Checks whether state is valid
+            upon generation.
+
+            Args:
+                node        Node instance for which to generate possible
+                            successor states.
+
+            Return:
+                List of successor states.
         """
         # List of 12 or 11 random movements, one for each child
         p_mov = node.parent_mov
@@ -68,8 +78,7 @@ class RCGraph(object):
         return [Node(move_rubiks_cube(node.rubiks_cube, m), m, node.mov) for m in moves]
 
     def _is_valid_adjacents(self, nodes):
-        """
-            Checks if the generated adjacent is valid,
+        """ Checks if the generated adjacent is valid,
             the list of nodes will be valid if it none of its nodes already exist \
             in the graph.
         """
@@ -79,8 +88,11 @@ class RCGraph(object):
         return True
 
     def _add_node(self, node, parent=None):
-        """
-            Adds a new node in the graph.
+        """ Adds a new node in the graph.
+
+            Args:
+                node        The node that is to be added to the graph.
+                parent      (Optional) parent of the node to attach to the graph.
         """
         self._graph.add_node(node)
         if parent:
