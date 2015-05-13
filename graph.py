@@ -81,6 +81,9 @@ class RCGraph(object):
         """ Checks if the generated adjacent is valid,
             the list of nodes will be valid if it none of its nodes already exist \
             in the graph.
+
+            Args:
+                nodes       The list of nodes whose validity to check.
         """
         for rb in nodes:
             if self._graph.has_node(rb):

@@ -1,7 +1,7 @@
 import copy
 import numpy as np
 
-
+# Cube faces
 FRONT, BACK, DOWN, LEFT, RIGHT, UP = 0, 1, 2, 3, 4, 5
 
 # A dictionary with faces: for better understanding each face can be
@@ -10,9 +10,15 @@ FACES = {FRONT: 'F', BACK: 'B', DOWN: 'D', LEFT: 'L', RIGHT: 'R', UP: 'U'}
 
 
 class RubiksCube(object):
-    """docstring for Cube"""
+    """ Represents a rubik's cube.
+    """
 
     def __init__(self, cube=None):
+        """ Constructor.
+
+            Args:
+                cube        The cube's state.
+        """
         if cube:
             self.cube = cube
         else:
@@ -37,8 +43,7 @@ class RubiksCube(object):
         return [self._generate_face(value) for value in FACES.itervalues()]
 
     def _generate_face(self, face):
-        """
-        Generates a cube's face correctly arranged.
+        """ Generates a cube's face correctly arranged.
         An face is represented as a 3x3 matrix (array of arrays), each value \
         in the matrix representes a cubelet's face in the cube's face.
 
@@ -54,9 +59,8 @@ class RubiksCube(object):
 
 
 def move_rubiks_cube(rubiks_cube, face):
-    """
-    Returns a new RubiksCube with the face rotated.
-    Input face can be a value between 0 and 11 (all possible movements)
+    """ Returns a new RubiksCube with the face rotated.
+        Input face can be a value between 0 and 11 (all possible movements)
     """
     cube = None
     if face <= 5:
@@ -68,8 +72,7 @@ def move_rubiks_cube(rubiks_cube, face):
 
 
 def _move_cubes_face(cube, face, clockwise):
-    """
-    Returns a cube with the face rotated.
+    """ Returns a cube with the face rotated.
     """
     if clockwise:
         return _rotate_clockwise(cube, face)
@@ -78,8 +81,11 @@ def _move_cubes_face(cube, face, clockwise):
 
 
 def _rotate_clockwise(cube_state, face):
-    """
-    Applies one clockwise movement over a cube's face.
+    """ Applies one clockwise movement over a cube's face.
+
+        Args:
+            cube_state
+            face
     """
     cube = copy.deepcopy(cube_state)
 
@@ -123,8 +129,10 @@ def _rotate_clockwise(cube_state, face):
 
 
 def _rotate_clockwise_matrix(matrix):
-    """
-    Rotates the matrix by 90 degrees
+    """ Rotates the matrix by 90 degrees
+
+        Args:
+            matrix
     """
     # numpy.rot90() Rotate an array by 90 degrees in the counter-clockwise
     # direction.
@@ -132,9 +140,12 @@ def _rotate_clockwise_matrix(matrix):
 
 
 def _rotate_counter_clockwise(cube_state, face):
-    """
-    Rotates a face by 90 degrees in the counter-clockwise direction applying \
-    _rotate_clockwise three times.
+    """ Rotates a face by 90 degrees in the counter-clockwise direction applying \
+        _rotate_clockwise three times.
+
+        Args:
+            cube_state
+            face
     """
     cube = _rotate_clockwise(cube_state, face)
     cube = _rotate_clockwise(cube, face)
