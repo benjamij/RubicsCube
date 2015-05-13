@@ -25,15 +25,21 @@ class Node(object):
 
 
 class RCGraph(object):
-
+    """ Represents the rubik's cube in graph form. Relies on networkx.
+    """
     def __init__(self):
+        """ Constructor. Initializes the graph with a solved cube.
+        """
         self._graph = nx.Graph()
         self.root = Node(RubiksCube(), -1, -1)
         self._graph.add_node(self.root)
 
     def generate_adjacents(self, node):
-        """
-        Returns the node adjacent list
+        """ Returns the node adjacent list
+
+            Args:
+                node        Node instance for which to generate possible
+                            successor states.
         """
         nodes = self._get_possible_adjacents(node)
         while(not self._is_valid_adjacents(nodes)):
@@ -44,7 +50,7 @@ class RCGraph(object):
 
     def _get_possible_adjacents(self, node):
         """
-        Returns a possible list of adjacents.
+            Returns a possible list of adjacents.
         """
         # List of 12 or 11 random movements, one for each child
         p_mov = node.parent_mov
@@ -63,9 +69,9 @@ class RCGraph(object):
 
     def _is_valid_adjacents(self, nodes):
         """
-        Checks if the generated adjacents is valid,
-        the list of nodes will be valid if it none of its nodes already exist \
-        in the graph.
+            Checks if the generated adjacent is valid,
+            the list of nodes will be valid if it none of its nodes already exist \
+            in the graph.
         """
         for rb in nodes:
             if self._graph.has_node(rb):
@@ -74,7 +80,7 @@ class RCGraph(object):
 
     def _add_node(self, node, parent=None):
         """
-        Adds a new node in the graph.
+            Adds a new node in the graph.
         """
         self._graph.add_node(node)
         if parent:
