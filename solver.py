@@ -73,7 +73,7 @@ class Solver:
         while q:
             node = q.pop(0)
 
-            if node.rubiks_cube.cube is target.rubiks_cube.cube:
+            if node.rubiks_cube.cube == target.rubiks_cube.cube:
                 return node
 
             # Get elapsed time in seconds
