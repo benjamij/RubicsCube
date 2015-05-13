@@ -1,4 +1,3 @@
-__author__ = 'Benjamin Jakobus'
 
 from collections import deque
 import time
@@ -38,6 +37,7 @@ class Solver:
         # Start with the root node (i.e. solved rubik's cube)
         q.appendleft(offset)
         count = 0
+
         while q:
             # Remove element from the left side of the queue
             node = q.popleft()
@@ -119,5 +119,5 @@ class Solver:
         """
         with open(file, "a") as f:
             f.write(description + "\n")
-            f.write(cube_path)
+            f.write(str(cube_path))
             f.write("=======\n\n")

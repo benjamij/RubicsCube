@@ -1,4 +1,3 @@
-__author__ = 'Benjamin Jakobus'
 from graph import *
 import math
 from solver import *
@@ -13,6 +12,7 @@ TIME_LIMIT = 3
 # Create graph with initial configuration
 graph = RCGraph()
 solver = Solver(graph)
+
 # List of lists containing the results [[x-axis], [y-axis]]
 results = [[], []]
 
