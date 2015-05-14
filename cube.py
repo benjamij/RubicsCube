@@ -9,7 +9,7 @@ FACES = {FRONT: 'F', BACK: 'B', DOWN: 'D', LEFT: 'L', RIGHT: 'R', UP: 'U'}
 
 def rubiks_cube():
     """
-    Rutruns a cube in its initial state ('solved' cube), when each cube's \
+    Returns a cube in its initial state ('solved' cube), when each cube's \
     face correctly arranged. The cube is represented as an array of faces, \
     each face as an array of rows and each row is an array with three values.
     """
