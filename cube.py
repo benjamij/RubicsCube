@@ -1,5 +1,3 @@
-import copy
-import numpy as np
 
 # Cube faces
 FRONT, BACK, DOWN, LEFT, RIGHT, UP = 0, 1, 2, 3, 4, 5
@@ -9,53 +7,20 @@ FRONT, BACK, DOWN, LEFT, RIGHT, UP = 0, 1, 2, 3, 4, 5
 FACES = {FRONT: 'F', BACK: 'B', DOWN: 'D', LEFT: 'L', RIGHT: 'R', UP: 'U'}
 
 
-class RubiksCube(object):
-    """ Represents a rubik's cube.
+def rubiks_cube():
     """
-
-    def __init__(self, cube=None):
-        """ Constructor.
-
-            Args:
-                cube        The cube's state.
-        """
-        if cube:
-            self.cube = cube
-        else:
-            self.cube = self.initial_state()
-
-    def initial_state(self):
-        """
-        Returns a 'solved' cube, each cube's face correctly arranged.
-        The cube is represented as an array of faces, each face as an array \
-        of rows and each row is an array with three values.
-
-        The solved cube looks like:
-        [
+    Rutruns a cube in its initial state ('solved' cube), when each cube's \
+    face correctly arranged. The cube is represented as an array of faces, \
+    each face as an array of rows and each row is an array with three values.
+    """
+    return [
         [['F1', 'F2', 'F3'], ['F4', 'F5', 'F6'], ['F7', 'F8', 'F9']],
         [['B1', 'B2', 'B3'], ['B4', 'B5', 'B6'], ['B7', 'B8', 'B9']],
-        ...
+        [['D1', 'D2', 'D3'], ['D4', 'D5', 'D6'], ['D7', 'D8', 'D9']],
+        [['L1', 'L2', 'L3'], ['L4', 'L5', 'L6'], ['L7', 'L8', 'L9']],
+        [['R1', 'R2', 'R3'], ['R4', 'R5', 'R6'], ['R7', 'R8', 'R9']],
         [['U1', 'U2', 'U3'], ['U4', 'U5', 'U6'], ['U7', 'U8', 'U9']]
-        ]
-        """
-        #  For each value in the dict 'FACES' ('F', 'B'... 'U'),
-        # calls _generate_face passing the value as argument
-        return [self._generate_face(value) for value in FACES.itervalues()]
-
-    def _generate_face(self, face):
-        """ Generates a cube's face correctly arranged.
-        An face is represented as a 3x3 matrix (array of arrays), each value \
-        in the matrix representes a cubelet's face in the cube's face.
-
-        A matrix for face 'a':
-        [['a1', 'a2', 'a3'],
-         ['a4', 'a5', 'a6'],
-         ['a7', 'a8', 'a9']]
-        """
-        matrix = []
-        for i in range(3):
-            matrix.append(["%s%d" % (face, x+(3*i)) for x in range(1, 4)])
-        return matrix
+    ]
 
 
 def move_rubiks_cube(rubiks_cube, face):
@@ -64,11 +29,11 @@ def move_rubiks_cube(rubiks_cube, face):
     """
     cube = None
     if face <= 5:
-        cube = _move_cubes_face(rubiks_cube.cube, face, True)
+        cube = _move_cubes_face(rubiks_cube, face, True)
     else:
         _face = face - 6
-        cube = _move_cubes_face(rubiks_cube.cube, _face, False)
-    return RubiksCube(cube)
+        cube = _move_cubes_face(rubiks_cube, _face, False)
+    return cube
 
 
 def _move_cubes_face(cube, face, clockwise):
@@ -87,56 +52,61 @@ def _rotate_clockwise(cube_state, face):
             cube_state
             face
     """
-    cube = copy.deepcopy(cube_state)
+    cube = rubiks_cube()
 
     if face is UP:
-        cube[UP] = _rotate_clockwise_matrix(cube[UP])
+        cube[UP] = _rotate_clockwise_matrix(cube_state[UP])
         cube[FRONT][0], cube[RIGHT][0], cube[BACK][0], cube[LEFT][0] = cube_state[LEFT][0], cube_state[FRONT][0], cube_state[RIGHT][0], cube_state[BACK][0]
+        cube[DOWN] = cube_state[DOWN]
 
     elif face is DOWN:
-        cube[DOWN] = _rotate_clockwise_matrix(cube[DOWN])
+        cube[DOWN] = _rotate_clockwise_matrix(cube_state[DOWN])
         cube[FRONT][2], cube[RIGHT][2], cube[BACK][2], cube[LEFT][2] = cube_state[LEFT][2], cube_state[FRONT][2], cube_state[RIGHT][2], cube_state[BACK][2]
+        cube[UP] = cube_state[UP]
 
     elif face is FRONT:
-        cube[FRONT] = _rotate_clockwise_matrix(cube[FRONT])
+        cube[FRONT] = _rotate_clockwise_matrix(cube_state[FRONT])
         cube[UP][2] = [cube_state[LEFT][2][2], cube_state[LEFT][1][2], cube_state[LEFT][0][2]]
         cube[LEFT][0][2], cube[LEFT][1][2], cube[LEFT][2][2] = cube_state[DOWN][0][0], cube_state[DOWN][0][1], cube_state[DOWN][0][2]
         cube[DOWN][0] = [cube_state[RIGHT][2][0], cube_state[RIGHT][1][0], cube_state[RIGHT][0][0]]
         cube[RIGHT][0][0], cube[RIGHT][1][0], cube[RIGHT][2][0] = cube_state[UP][2][0], cube_state[UP][2][1], cube_state[UP][2][2]
+        cube[BACK] = cube_state[BACK]
 
     elif face is BACK:
-        cube[BACK] = _rotate_clockwise_matrix(cube[BACK])
+        cube[BACK] = _rotate_clockwise_matrix(cube_state[BACK])
         cube[DOWN][2] = [cube_state[LEFT][0][0], cube_state[LEFT][1][0], cube_state[LEFT][2][0]]
         cube[RIGHT][0][2], cube[RIGHT][1][2], cube[RIGHT][2][2] = cube_state[DOWN][2][2], cube_state[DOWN][2][1], cube_state[DOWN][2][0]
         cube[UP][0] = [cube_state[RIGHT][0][2], cube_state[RIGHT][1][2], cube_state[RIGHT][2][2]]
         cube[LEFT][0][0], cube[LEFT][1][0], cube[LEFT][2][0] = cube_state[UP][0][2], cube_state[UP][0][1], cube_state[UP][0][0]
+        cube[FRONT] = cube_state[FRONT]
 
     elif face is RIGHT:
-        cube[RIGHT] = _rotate_clockwise_matrix(cube[RIGHT])
+        cube[RIGHT] = _rotate_clockwise_matrix(cube_state[RIGHT])
         cube[BACK][0][0], cube[BACK][1][0], cube[BACK][2][0] = cube_state[UP][2][2], cube_state[UP][1][2], cube_state[UP][0][2]
         cube[DOWN][0][2], cube[DOWN][1][2], cube[DOWN][2][2] = [cube_state[BACK][2][0], cube_state[BACK][1][0], cube_state[BACK][0][0]]
         cube[UP][0][2], cube[UP][1][2], cube[UP][2][2] = [cube_state[FRONT][0][2], cube_state[FRONT][1][2], cube_state[FRONT][2][2]]
         cube[FRONT][0][2], cube[FRONT][1][2], cube[FRONT][2][2] = [cube_state[DOWN][0][2], cube_state[DOWN][1][2], cube_state[DOWN][2][2]]
+        cube[LEFT] = cube_state[LEFT]
 
     elif face is LEFT:
-        cube[LEFT] = _rotate_clockwise_matrix(cube[LEFT])
+        cube[LEFT] = _rotate_clockwise_matrix(cube_state[LEFT])
         cube[BACK][0][2], cube[BACK][1][2], cube[BACK][2][2] = cube_state[DOWN][2][0], cube_state[DOWN][1][0], cube_state[DOWN][0][0]
         cube[DOWN][0][0], cube[DOWN][1][0], cube[DOWN][2][0] = [cube_state[FRONT][0][0], cube_state[FRONT][1][0], cube_state[FRONT][2][0]]
         cube[UP][0][0], cube[UP][1][0], cube[UP][2][0] = [cube_state[BACK][2][2], cube_state[BACK][1][2], cube_state[BACK][0][2]]
         cube[FRONT][0][0], cube[FRONT][1][0], cube[FRONT][2][0] = [cube_state[UP][0][0], cube_state[UP][1][0], cube_state[UP][2][0]]
+        cube[RIGHT] = cube_state[RIGHT]
 
     return cube
 
 
-def _rotate_clockwise_matrix(matrix):
+def _rotate_clockwise_matrix(m):
     """ Rotates the matrix by 90 degrees
 
         Args:
             matrix
     """
-    # numpy.rot90() Rotate an array by 90 degrees in the counter-clockwise
-    # direction.
-    return np.rot90(np.array(matrix), 3).tolist()
+    m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2], = m[2][0], m[1][0], m[0][0], m[2][1], m[1][1], m[0][1], m[2][2], m[1][2], m[0][2]
+    return m
 
 
 def _rotate_counter_clockwise(cube_state, face):
