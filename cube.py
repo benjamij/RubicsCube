@@ -1,3 +1,4 @@
+import copy
 
 # Cube faces
 FRONT, BACK, DOWN, LEFT, RIGHT, UP = 0, 1, 2, 3, 4, 5
@@ -9,7 +10,7 @@ FACES = {FRONT: 'F', BACK: 'B', DOWN: 'D', LEFT: 'L', RIGHT: 'R', UP: 'U'}
 
 def rubiks_cube():
     """
-    Returns a cube in its initial state ('solved' cube), when each cube's \
+    Rutruns a cube in its initial state ('solved' cube), when each cube's \
     face correctly arranged. The cube is represented as an array of faces, \
     each face as an array of rows and each row is an array with three values.
     """
@@ -52,44 +53,43 @@ def _rotate_clockwise(cube_state, face):
             cube_state
             face
     """
-    cube = list(cube_state)
+    cube = copy.deepcopy(cube_state)
 
     if face is UP:
-        cube[UP] = _rotate_clockwise_matrix(cube_state[UP])
+        cube[UP] = _rotate_clockwise_matrix(cube[UP])
         cube[FRONT][0], cube[RIGHT][0], cube[BACK][0], cube[LEFT][0] = cube_state[LEFT][0], cube_state[FRONT][0], cube_state[RIGHT][0], cube_state[BACK][0]
 
     elif face is DOWN:
-        cube[DOWN] = _rotate_clockwise_matrix(cube_state[DOWN])
+        cube[DOWN] = _rotate_clockwise_matrix(cube[DOWN])
         cube[FRONT][2], cube[RIGHT][2], cube[BACK][2], cube[LEFT][2] = cube_state[LEFT][2], cube_state[FRONT][2], cube_state[RIGHT][2], cube_state[BACK][2]
 
     elif face is FRONT:
-        cube[FRONT] = _rotate_clockwise_matrix(cube_state[FRONT])
+        cube[FRONT] = _rotate_clockwise_matrix(cube[FRONT])
         cube[UP][2] = [cube_state[LEFT][2][2], cube_state[LEFT][1][2], cube_state[LEFT][0][2]]
         cube[LEFT][0][2], cube[LEFT][1][2], cube[LEFT][2][2] = cube_state[DOWN][0][0], cube_state[DOWN][0][1], cube_state[DOWN][0][2]
         cube[DOWN][0] = [cube_state[RIGHT][2][0], cube_state[RIGHT][1][0], cube_state[RIGHT][0][0]]
         cube[RIGHT][0][0], cube[RIGHT][1][0], cube[RIGHT][2][0] = cube_state[UP][2][0], cube_state[UP][2][1], cube_state[UP][2][2]
 
     elif face is BACK:
-        cube[BACK] = _rotate_clockwise_matrix(cube_state[BACK])
+        cube[BACK] = _rotate_clockwise_matrix(cube[BACK])
         cube[DOWN][2] = [cube_state[LEFT][0][0], cube_state[LEFT][1][0], cube_state[LEFT][2][0]]
         cube[RIGHT][0][2], cube[RIGHT][1][2], cube[RIGHT][2][2] = cube_state[DOWN][2][2], cube_state[DOWN][2][1], cube_state[DOWN][2][0]
         cube[UP][0] = [cube_state[RIGHT][0][2], cube_state[RIGHT][1][2], cube_state[RIGHT][2][2]]
         cube[LEFT][0][0], cube[LEFT][1][0], cube[LEFT][2][0] = cube_state[UP][0][2], cube_state[UP][0][1], cube_state[UP][0][0]
 
     elif face is RIGHT:
-        cube[RIGHT] = _rotate_clockwise_matrix(cube_state[RIGHT])
+        cube[RIGHT] = _rotate_clockwise_matrix(cube[RIGHT])
         cube[BACK][0][0], cube[BACK][1][0], cube[BACK][2][0] = cube_state[UP][2][2], cube_state[UP][1][2], cube_state[UP][0][2]
         cube[DOWN][0][2], cube[DOWN][1][2], cube[DOWN][2][2] = [cube_state[BACK][2][0], cube_state[BACK][1][0], cube_state[BACK][0][0]]
         cube[UP][0][2], cube[UP][1][2], cube[UP][2][2] = [cube_state[FRONT][0][2], cube_state[FRONT][1][2], cube_state[FRONT][2][2]]
         cube[FRONT][0][2], cube[FRONT][1][2], cube[FRONT][2][2] = [cube_state[DOWN][0][2], cube_state[DOWN][1][2], cube_state[DOWN][2][2]]
 
     elif face is LEFT:
-        cube[LEFT] = _rotate_clockwise_matrix(cube_state[LEFT])
+        cube[LEFT] = _rotate_clockwise_matrix(cube[LEFT])
         cube[BACK][0][2], cube[BACK][1][2], cube[BACK][2][2] = cube_state[DOWN][2][0], cube_state[DOWN][1][0], cube_state[DOWN][0][0]
         cube[DOWN][0][0], cube[DOWN][1][0], cube[DOWN][2][0] = [cube_state[FRONT][0][0], cube_state[FRONT][1][0], cube_state[FRONT][2][0]]
         cube[UP][0][0], cube[UP][1][0], cube[UP][2][0] = [cube_state[BACK][2][2], cube_state[BACK][1][2], cube_state[BACK][0][2]]
         cube[FRONT][0][0], cube[FRONT][1][0], cube[FRONT][2][0] = [cube_state[UP][0][0], cube_state[UP][1][0], cube_state[UP][2][0]]
-        cube[RIGHT] = cube_state[RIGHT]
 
     return cube
 
@@ -100,6 +100,8 @@ def _rotate_clockwise_matrix(m):
         Args:
             matrix
     """
+    # numpy.rot90() Rotate an array by 90 degrees in the counter-clockwise
+    # direction.
     m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2], = m[2][0], m[1][0], m[0][0], m[2][1], m[1][1], m[0][1], m[2][2], m[1][2], m[0][2]
     return m
 
