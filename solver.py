@@ -73,7 +73,7 @@ class Solver:
         while q:
             node = q.pop(0)
 
-            if node.rubiks_cube.cube == target.rubiks_cube.cube:
+            if node.rubiks_cube == target.rubiks_cube:
                 return node
 
             # Get elapsed time in seconds
@@ -101,11 +101,11 @@ class Solver:
             Return:
                 List of moves indicating the shortest path between the offset state and the target state.
         """
-        path = [node.rubiks_cube.cube]
+        path = [node.rubiks_cube]
 
         while node.parent is not None:
             node = node.parent
-            path.append(node.rubiks_cube.cube)
+            path.append(node.rubiks_cube)
         return path
 
     def save_result(self, description, cube_path, file):
