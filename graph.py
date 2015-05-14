@@ -1,7 +1,7 @@
 import networkx as nx
 from sympy.combinatorics.permutations import Permutation
 
-from cube import RubiksCube
+from cube import rubiks_cube
 from cube import move_rubiks_cube
 
 
@@ -26,11 +26,14 @@ class RCGraph(object):
     """ Represents the rubik's cube in graph form. Relies on networkx.
     """
 
-    def __init__(self):
+    def __init__(self, root=None):
         """ Constructor. Initializes the graph with a solved cube.
         """
         self._graph = nx.Graph()
-        self.root = Node(RubiksCube(), -1, -1)
+        if root:
+            self.root = root
+        else:
+            self.root = Node(rubiks_cube(), -1, -1)
         self._graph.add_node(self.root)
 
     def generate_adjacents(self, node):
