@@ -52,17 +52,15 @@ def _rotate_clockwise(cube_state, face):
             cube_state
             face
     """
-    cube = rubiks_cube()
+    cube = list(cube_state)
 
     if face is UP:
         cube[UP] = _rotate_clockwise_matrix(cube_state[UP])
         cube[FRONT][0], cube[RIGHT][0], cube[BACK][0], cube[LEFT][0] = cube_state[LEFT][0], cube_state[FRONT][0], cube_state[RIGHT][0], cube_state[BACK][0]
-        cube[DOWN] = cube_state[DOWN]
 
     elif face is DOWN:
         cube[DOWN] = _rotate_clockwise_matrix(cube_state[DOWN])
         cube[FRONT][2], cube[RIGHT][2], cube[BACK][2], cube[LEFT][2] = cube_state[LEFT][2], cube_state[FRONT][2], cube_state[RIGHT][2], cube_state[BACK][2]
-        cube[UP] = cube_state[UP]
 
     elif face is FRONT:
         cube[FRONT] = _rotate_clockwise_matrix(cube_state[FRONT])
@@ -70,7 +68,6 @@ def _rotate_clockwise(cube_state, face):
         cube[LEFT][0][2], cube[LEFT][1][2], cube[LEFT][2][2] = cube_state[DOWN][0][0], cube_state[DOWN][0][1], cube_state[DOWN][0][2]
         cube[DOWN][0] = [cube_state[RIGHT][2][0], cube_state[RIGHT][1][0], cube_state[RIGHT][0][0]]
         cube[RIGHT][0][0], cube[RIGHT][1][0], cube[RIGHT][2][0] = cube_state[UP][2][0], cube_state[UP][2][1], cube_state[UP][2][2]
-        cube[BACK] = cube_state[BACK]
 
     elif face is BACK:
         cube[BACK] = _rotate_clockwise_matrix(cube_state[BACK])
@@ -78,7 +75,6 @@ def _rotate_clockwise(cube_state, face):
         cube[RIGHT][0][2], cube[RIGHT][1][2], cube[RIGHT][2][2] = cube_state[DOWN][2][2], cube_state[DOWN][2][1], cube_state[DOWN][2][0]
         cube[UP][0] = [cube_state[RIGHT][0][2], cube_state[RIGHT][1][2], cube_state[RIGHT][2][2]]
         cube[LEFT][0][0], cube[LEFT][1][0], cube[LEFT][2][0] = cube_state[UP][0][2], cube_state[UP][0][1], cube_state[UP][0][0]
-        cube[FRONT] = cube_state[FRONT]
 
     elif face is RIGHT:
         cube[RIGHT] = _rotate_clockwise_matrix(cube_state[RIGHT])
@@ -86,7 +82,6 @@ def _rotate_clockwise(cube_state, face):
         cube[DOWN][0][2], cube[DOWN][1][2], cube[DOWN][2][2] = [cube_state[BACK][2][0], cube_state[BACK][1][0], cube_state[BACK][0][0]]
         cube[UP][0][2], cube[UP][1][2], cube[UP][2][2] = [cube_state[FRONT][0][2], cube_state[FRONT][1][2], cube_state[FRONT][2][2]]
         cube[FRONT][0][2], cube[FRONT][1][2], cube[FRONT][2][2] = [cube_state[DOWN][0][2], cube_state[DOWN][1][2], cube_state[DOWN][2][2]]
-        cube[LEFT] = cube_state[LEFT]
 
     elif face is LEFT:
         cube[LEFT] = _rotate_clockwise_matrix(cube_state[LEFT])
