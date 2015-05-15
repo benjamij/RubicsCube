@@ -2,22 +2,18 @@
 from collections import deque
 import time
 
+from graph import RCGraph
+from graph import Node
+
 """ The rubik's cube solver. Shuffles a rubik's cube and then
     attempts to solve it.
 """
 
+
 class Solver:
 
-    def __init__(self, graph):
-        """ Constructor.
-
-        Args:
-            graph       RCGraph instance on which to execute the depth-first search
-
-        """
-        self.graph = graph
-
-    def dfs(self, offset, limit):
+    def dfs(self, limit):
+        graph = RCGraph()
         """ Performs a depth-first search on the given graph
             until the specified limit is reached.
 
@@ -35,7 +31,7 @@ class Solver:
         q = deque()
 
         # Start with the root node (i.e. solved rubik's cube)
-        q.appendleft(offset)
+        q.appendleft(graph.root)
         count = 0
 
         while q:
@@ -45,10 +41,10 @@ class Solver:
 
             # If we reach our limit, then terminate and return the node
             if count >= limit:
-                return node
+                return Node(node.rubiks_cube, node.mov, -1)
 
             # Generate successor states (i.e. neighbours for the given node)
-            for adj in self.graph.generate_adjacents(node):
+            for adj in graph.generate_adjacents(node):
                 # Always add nodes to the left side of the queue - this way
                 # we ensure a FIFO order when processing the nodes
                 q.appendleft(adj)
@@ -64,6 +60,7 @@ class Solver:
                 target              The target node to reach
                 time_limit          Maximum amount of time (in minutes) to search until terminating
         """
+        graph = RCGraph(offset)
         # Queue for performing the bfs traversal
         q = []
         q.append(offset)
@@ -87,7 +84,7 @@ class Solver:
                 return node
 
             # Generate successor states (i.e. neighbours for the given node)
-            for adj in self.graph.generate_adjacents(node):
+            for adj in graph.generate_adjacents(node):
                 adj.parent = node
                 q.append(adj)
 
