@@ -1,4 +1,4 @@
-import copy
+import numpy as np
 
 # Cube faces
 FRONT, BACK, DOWN, LEFT, RIGHT, UP = 0, 1, 2, 3, 4, 5
@@ -53,7 +53,7 @@ def _rotate_clockwise(cube_state, face):
             cube_state
             face
     """
-    cube = copy.deepcopy(cube_state)
+    cube = np.array(cube_state).tolist()
 
     if face is UP:
         cube[UP] = _rotate_clockwise_matrix(cube[UP])
