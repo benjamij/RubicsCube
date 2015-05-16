@@ -28,6 +28,9 @@ class RCGraph(object):
 
     def __init__(self, root=None):
         """ Constructor. Initializes the graph with a solved cube.
+
+            Args:
+                root        The graph's root node. Optional.
         """
         self._graph = nx.Graph()
         if root:
@@ -70,7 +73,6 @@ class RCGraph(object):
         # Removes the movement which creates a adjacent equals to the node's
         # parent
         moves = filter(lambda n: n != p_mov,
-
                        # The permutation of 12 movements (0, 1, 2, ..., 11) to
                        #ensure that there is no equal adjacent nodes
                        Permutation.unrank_nonlex(12, 479001600).list())

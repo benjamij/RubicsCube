@@ -9,10 +9,9 @@ FACES = {FRONT: 'F', BACK: 'B', DOWN: 'D', LEFT: 'L', RIGHT: 'R', UP: 'U'}
 
 
 def rubiks_cube():
-    """
-    Rutruns a cube in its initial state ('solved' cube), when each cube's \
-    face correctly arranged. The cube is represented as an array of faces, \
-    each face as an array of rows and each row is an array with three values.
+    """ Returns a cube in its initial state ('solved' cube), when each cube's \
+        face correctly arranged. The cube is represented as an array of faces, \
+        each face as an array of rows and each row is an array with three values.
     """
     return [
         [['F1', 'F2', 'F3'], ['F4', 'F5', 'F6'], ['F7', 'F8', 'F9']],
@@ -38,7 +37,16 @@ def move_rubiks_cube(rubiks_cube, face):
 
 
 def _move_cubes_face(cube, face, clockwise):
-    """ Returns a cube with the face rotated.
+    """ Returns a cube with the face rotated 90 degrees clockwise
+        or counter-clockwise.
+
+        Args:
+            cube        The cube to rotate
+            face
+            clockwise   Boolean indicating whether or not to rotate the cube clockwise
+
+        Return:
+            Returns the rotated cube
     """
     if clockwise:
         return _rotate_clockwise(cube, face)
@@ -100,8 +108,9 @@ def _rotate_clockwise_matrix(m):
         Args:
             matrix
     """
-    # numpy.rot90() Rotate an array by 90 degrees in the counter-clockwise
-    # direction.
+    # Rotate the matrix. This is the same than using
+    # numpy.rot90() to rotate an array by 90 degrees in the counter-clockwise
+    # direction (just faster than using numpy!).
     m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2], = m[2][0], m[1][0], m[0][0], m[2][1], m[1][1], m[0][1], m[2][2], m[1][2], m[0][2]
     return m
 
