@@ -1,128 +1,92 @@
 import numpy as np
 
-# Cube faces
-FRONT, BACK, DOWN, LEFT, RIGHT, UP = 0, 1, 2, 3, 4, 5
+# FACES is an array of faces where each face is represented by an array of \
+# pieces.
+FACES = [
+    #Front
+    [0, 1, 2, 3, 4, 5, 6, 7],
+    # Back
+    [12, 13, 14, 15, 16, 17, 18, 19],
+    # Down
+    [5, 6, 7, 9, 10, 17, 18, 19],
+    # Up
+    [0, 1, 2, 8, 11, 12, 13, 14],
+    # Right
+    [2, 4, 7, 10, 11, 12, 15, 17],
+    # Left
+    [0, 3, 5, 8, 9, 14, 16, 19]
+]
 
-# A dictionary with faces: for better understanding each face can be
-# considered a color in rubik's cube.
-FACES = {FRONT: 'F', BACK: 'B', DOWN: 'D', LEFT: 'L', RIGHT: 'R', UP: 'U'}
+# Basically, one movement is just a rearrange of pieces that belongs to the \
+# same face. The dict MOVEMENTS has the movement code (key) and the array
+# (value) which represents the new arrangement of pieces.
+MOVEMENTS = {
+    # Front face movement (moves pieces: 0, 1, 2, 3, 4, 5, 6 and 7)
+    # clockwise:
+    0: [5, 3, 0, 6, 1, 7, 4, 2],
+    # counterclockwise:
+    6: [2, 4, 7, 1, 6, 0, 3, 5],
+
+    # Back face movement (moves pieces: 12, 13, 14, 15, 16, 17, 18 and 19)
+    # clockwise:
+    1: [17, 15, 12, 18, 13, 19, 16, 14],
+    # counterclockwise:
+    7: [14, 16, 19, 13, 18, 12, 15, 17],
+
+    # Down face movement (moves pieces: 5, 6, 7, 9, 10, 17, 18 and 19)
+    # clockwise:
+    2: [19, 9, 5, 18, 6, 7, 10, 17],
+    # counterclockwise:
+    8: [7, 10, 17, 6, 18, 19, 9, 5],
+
+    # Up face movement (moves pieces: 0, 1, 2, 8, 11, 12, 13 and 14)
+    # clockwise:
+    3: [2, 11, 12, 1, 13, 14, 8, 0],
+    # counterclockwise:
+    9: [14, 8, 0, 13, 1, 2, 11, 12],
+
+    # Right face movement (moves pieces: 2, 4, 7, 10, 11, 12, 15 and 17)
+    # clockwise:
+    4: [7, 10, 17, 15, 4, 2, 11, 12],
+    # counterclockwise:
+    10: [12, 11, 2, 4, 15, 17, 10, 7],
+
+    # Left face movement (moves pieces: 0, 3, 5, 8, 9, 14, 16 and 19)
+    # clockwise:
+    5: [14, 8, 0, 16, 3, 19, 9, 5],
+    # counterclockwise:
+    11: [5, 9, 19, 3, 16, 0, 8, 14]
+}
 
 
 def rubiks_cube():
-    """ Returns a cube in its initial state ('solved' cube), when each cube's \
-        face correctly arranged. The cube is represented as an array of faces, \
-        each face as an array of rows and each row is an array with three values.
+    """ Returns a cube in its initial state ('solved' cube): each cube's face \
+    correctly arranged. The cube is represented as an array of pieces.
     """
     return [
-        [['F1', 'F2', 'F3'], ['F4', 'F5', 'F6'], ['F7', 'F8', 'F9']],
-        [['B1', 'B2', 'B3'], ['B4', 'B5', 'B6'], ['B7', 'B8', 'B9']],
-        [['D1', 'D2', 'D3'], ['D4', 'D5', 'D6'], ['D7', 'D8', 'D9']],
-        [['L1', 'L2', 'L3'], ['L4', 'L5', 'L6'], ['L7', 'L8', 'L9']],
-        [['R1', 'R2', 'R3'], ['R4', 'R5', 'R6'], ['R7', 'R8', 'R9']],
-        [['U1', 'U2', 'U3'], ['U4', 'U5', 'U6'], ['U7', 'U8', 'U9']]
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
     ]
 
 
-def move_rubiks_cube(rubiks_cube, face):
-    """ Returns a new RubiksCube with the face rotated.
-        Input face can be a value between 0 and 11 (all possible movements)
-    """
-    cube = None
-    if face <= 5:
-        cube = _move_cubes_face(rubiks_cube, face, True)
-    else:
-        _face = face - 6
-        cube = _move_cubes_face(rubiks_cube, _face, False)
-    return cube
-
-
-def _move_cubes_face(cube, face, clockwise):
-    """ Returns a cube with the face rotated 90 degrees clockwise
-        or counter-clockwise.
+def move_rubiks_cube(rubiks_cube, movement):
+    """ Applies a movement over the cube.
 
         Args:
-            cube        The cube to rotate
-            face
-            clockwise   Boolean indicating whether or not to rotate the cube clockwise
-
+            rubiks_cube     The cube
+            movement        The movement code [0 - 11]
         Return:
-            Returns the rotated cube
+            The cube moved
     """
-    if clockwise:
-        return _rotate_clockwise(cube, face)
-    else:
-        return _rotate_counter_clockwise(cube, face)
+    cube = np.array(rubiks_cube).tolist()
 
+    # Face that will be moved
+    face = FACES[movement if movement < 6 else movement - 6]
 
-def _rotate_clockwise(cube_state, face):
-    """ Applies one clockwise movement over a cube's face.
+    # New arrangement
+    f_movement = MOVEMENTS[movement]
 
-        Args:
-            cube_state
-            face
-    """
-    cube = np.array(cube_state).tolist()
-
-    if face is UP:
-        cube[UP] = _rotate_clockwise_matrix(cube[UP])
-        cube[FRONT][0], cube[RIGHT][0], cube[BACK][0], cube[LEFT][0] = cube_state[LEFT][0], cube_state[FRONT][0], cube_state[RIGHT][0], cube_state[BACK][0]
-
-    elif face is DOWN:
-        cube[DOWN] = _rotate_clockwise_matrix(cube[DOWN])
-        cube[FRONT][2], cube[RIGHT][2], cube[BACK][2], cube[LEFT][2] = cube_state[LEFT][2], cube_state[FRONT][2], cube_state[RIGHT][2], cube_state[BACK][2]
-
-    elif face is FRONT:
-        cube[FRONT] = _rotate_clockwise_matrix(cube[FRONT])
-        cube[UP][2] = [cube_state[LEFT][2][2], cube_state[LEFT][1][2], cube_state[LEFT][0][2]]
-        cube[LEFT][0][2], cube[LEFT][1][2], cube[LEFT][2][2] = cube_state[DOWN][0][0], cube_state[DOWN][0][1], cube_state[DOWN][0][2]
-        cube[DOWN][0] = [cube_state[RIGHT][2][0], cube_state[RIGHT][1][0], cube_state[RIGHT][0][0]]
-        cube[RIGHT][0][0], cube[RIGHT][1][0], cube[RIGHT][2][0] = cube_state[UP][2][0], cube_state[UP][2][1], cube_state[UP][2][2]
-
-    elif face is BACK:
-        cube[BACK] = _rotate_clockwise_matrix(cube[BACK])
-        cube[DOWN][2] = [cube_state[LEFT][0][0], cube_state[LEFT][1][0], cube_state[LEFT][2][0]]
-        cube[RIGHT][0][2], cube[RIGHT][1][2], cube[RIGHT][2][2] = cube_state[DOWN][2][2], cube_state[DOWN][2][1], cube_state[DOWN][2][0]
-        cube[UP][0] = [cube_state[RIGHT][0][2], cube_state[RIGHT][1][2], cube_state[RIGHT][2][2]]
-        cube[LEFT][0][0], cube[LEFT][1][0], cube[LEFT][2][0] = cube_state[UP][0][2], cube_state[UP][0][1], cube_state[UP][0][0]
-
-    elif face is RIGHT:
-        cube[RIGHT] = _rotate_clockwise_matrix(cube[RIGHT])
-        cube[BACK][0][0], cube[BACK][1][0], cube[BACK][2][0] = cube_state[UP][2][2], cube_state[UP][1][2], cube_state[UP][0][2]
-        cube[DOWN][0][2], cube[DOWN][1][2], cube[DOWN][2][2] = [cube_state[BACK][2][0], cube_state[BACK][1][0], cube_state[BACK][0][0]]
-        cube[UP][0][2], cube[UP][1][2], cube[UP][2][2] = [cube_state[FRONT][0][2], cube_state[FRONT][1][2], cube_state[FRONT][2][2]]
-        cube[FRONT][0][2], cube[FRONT][1][2], cube[FRONT][2][2] = [cube_state[DOWN][0][2], cube_state[DOWN][1][2], cube_state[DOWN][2][2]]
-
-    elif face is LEFT:
-        cube[LEFT] = _rotate_clockwise_matrix(cube[LEFT])
-        cube[BACK][0][2], cube[BACK][1][2], cube[BACK][2][2] = cube_state[DOWN][2][0], cube_state[DOWN][1][0], cube_state[DOWN][0][0]
-        cube[DOWN][0][0], cube[DOWN][1][0], cube[DOWN][2][0] = [cube_state[FRONT][0][0], cube_state[FRONT][1][0], cube_state[FRONT][2][0]]
-        cube[UP][0][0], cube[UP][1][0], cube[UP][2][0] = [cube_state[BACK][2][2], cube_state[BACK][1][2], cube_state[BACK][0][2]]
-        cube[FRONT][0][0], cube[FRONT][1][0], cube[FRONT][2][0] = [cube_state[UP][0][0], cube_state[UP][1][0], cube_state[UP][2][0]]
+    # Rearranging pieces...
+    for i in range(8):
+        cube[face[i]] = rubiks_cube[f_movement[i]]
 
     return cube
-
-
-def _rotate_clockwise_matrix(m):
-    """ Rotates the matrix by 90 degrees
-
-        Args:
-            matrix
-    """
-    # Rotate the matrix. This is the same than using
-    # numpy.rot90() to rotate an array by 90 degrees in the counter-clockwise
-    # direction (just faster than using numpy!).
-    m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2], = m[2][0], m[1][0], m[0][0], m[2][1], m[1][1], m[0][1], m[2][2], m[1][2], m[0][2]
-    return m
-
-
-def _rotate_counter_clockwise(cube_state, face):
-    """ Rotates a face by 90 degrees in the counter-clockwise direction applying \
-        _rotate_clockwise three times.
-
-        Args:
-            cube_state
-            face
-    """
-    cube = _rotate_clockwise(cube_state, face)
-    cube = _rotate_clockwise(cube, face)
-    return _rotate_clockwise(cube, face)
