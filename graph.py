@@ -1,5 +1,3 @@
-from sympy.combinatorics.permutations import Permutation
-
 from cube import rubiks_cube
 from cube import move_rubiks_cube
 
