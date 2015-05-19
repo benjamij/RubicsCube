@@ -1,6 +1,7 @@
 
 from collections import deque
 import time
+import random
 
 from graph import RCGraph
 from graph import Node
@@ -44,10 +45,9 @@ class Solver:
                 return Node(node.rubiks_cube, node.mov, -1)
 
             # Generate successor states (i.e. neighbours for the given node)
-            for adj in graph.generate_adjacents(node):
-                # Always add nodes to the left side of the queue - this way
-                # we ensure a FIFO order when processing the nodes
-                q.appendleft(adj)
+            nodes = graph.generate_adjacents(node)
+            q.appendleft(nodes[random.randint(0, len(nodes))])
+
         return None
 
     def bfs(self, offset, target, time_limit):
