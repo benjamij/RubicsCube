@@ -1,4 +1,3 @@
-import networkx as nx
 from sympy.combinatorics.permutations import Permutation
 
 from cube import rubiks_cube
@@ -32,12 +31,12 @@ class RCGraph(object):
             Args:
                 root        The graph's root node. Optional.
         """
-        self._graph = nx.Graph()
+        self._graph = list()
         if root:
             self.root = root
         else:
             self.root = Node(rubiks_cube(), -1, -1)
-        self._graph.add_node(self.root)
+        self._graph.append(self.root)
 
     def generate_adjacents(self, node):
         """ Returns the node adjacent list
@@ -49,15 +48,15 @@ class RCGraph(object):
             Return:
                 List of adjacent nodes.
         """
-        nodes = filter(lambda node: not self._graph.has_node(node),
+        nodes = filter(lambda node: not node in self._graph,
                        self._get_adjacents(node))
 
-        self._graph.add_nodes_from(nodes)
+        self._graph.append(nodes)
         return nodes
 
     def _get_adjacents(self, node):
-        """ Returns a possible list of adjacents. Checks whether state is valid
-            upon generation.
+        """ Returns a possible list of adjacents. Checks whether state is
+            valid upon generation.
 
             Args:
                 node        Node instance for which to generate possible
@@ -70,12 +69,10 @@ class RCGraph(object):
         n_mov = node.mov
         n_cube = node.rubiks_cube
 
-        # Removes the movement which creates a adjacent equals to the node's
-        # parent
-        moves = filter(lambda n: n != p_mov,
-                       # The permutation of 12 movements (0, 1, 2, ..., 11) to
-                       #ensure that there is no equal adjacent nodes
-                       Permutation.unrank_nonlex(12, 479001600).list())
+        # List of movements used to generate adjacent nodes.
+        moves = filter(lambda n: n != p_mov, range(12))
+        # Using filter to remove the movement that generates the parent node\
+        # avoiding to create a adjacent equals to the node's parent.
 
         return map(lambda m: Node(move_rubiks_cube(n_cube, m), m, n_mov),
                    moves)
