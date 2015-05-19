@@ -46,7 +46,9 @@ class Solver:
 
             # Generate successor states (i.e. neighbours for the given node)
             nodes = graph.generate_adjacents(node)
-            q.appendleft(nodes[random.randint(0, len(nodes))])
+
+            # Appends a random adjacent node from nodes
+            q.appendleft(nodes[random.randint(0, len(nodes) - 1)])
 
         return None
 
@@ -70,7 +72,7 @@ class Solver:
         while q:
             node = q.pop(0)
 
-            if node.rubiks_cube == target.rubiks_cube:
+            if node.rubiks_cube == target:
                 return node
 
             # Get elapsed time in seconds
