@@ -1,7 +1,8 @@
-from graph import *
+import time
 import math
-from solver import *
 import matplotlib.pyplot as plt
+from solver import Solver
+from cube import rubiks_cube
 
 
 # Run experiment
@@ -9,9 +10,7 @@ import matplotlib.pyplot as plt
 # Max limit for BFS is three minutes
 TIME_LIMIT = 3
 
-# Create graph with initial configuration
-graph = RCGraph()
-solver = Solver(graph)
+solver = Solver()
 
 # List of lists containing the results [[x-axis], [y-axis]]
 results = [[], []]
@@ -23,8 +22,10 @@ for i in range(0, 20):
     # Limit for DFS is 2 raised to the power of i
     limit = math.pow(2, i)
     for j in range(0, 100):
-        v = solver.dfs(graph.root, limit)
-        u = solver.bfs(v, graph.root, TIME_LIMIT)
+        v = solver.dfs(limit)
+
+        target = rubiks_cube()
+        u = solver.bfs(v, target, TIME_LIMIT)
 
         # Calculate shortest path
         path = solver.calculate_shortest_path(u)
@@ -34,7 +35,9 @@ for i in range(0, 20):
         results[1].append(len(path))
 
         # Save result to file
-        solver.save_result("Iteration i=" + str(i) + ", j= " + str(j), path, "result.txt")
+        solver.save_result(
+            "Iteration i=" + str(i) + ", j= " + str(j), path, "result.txt"
+        )
 
 # Get elapsed time in seconds
 elapsed = time.clock() - start
