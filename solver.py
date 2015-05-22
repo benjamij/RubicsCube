@@ -6,8 +6,8 @@ import random
 from graph import RCGraph
 from graph import Node
 
-""" The rubik's cube solver. Shuffles a rubik's cube and then
-    attempts to solve it.
+""" The rubik's cube solver. Contains methods for searching and calculating
+    the shortest path.
 """
 
 

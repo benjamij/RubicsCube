@@ -5,7 +5,8 @@ from solver import Solver
 from cube import rubiks_cube
 
 
-# Run experiment
+""" Entry point. Runs the experiment.
+"""
 
 # Max limit for BFS is three minutes
 TIME_LIMIT = 3

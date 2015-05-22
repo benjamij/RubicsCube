@@ -1,5 +1,9 @@
 import numpy as np
 
+""" This module is responsible for representing and applying
+    movements to the given cube.
+"""
+
 # FACES is an array of faces where each face is represented by an array of \
 # pieces.
 FACES = [
