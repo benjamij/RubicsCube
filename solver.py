@@ -13,6 +13,14 @@ from graph import Node
 
 class Solver:
 
+    def __init__(self, time_limit=3):
+        """ Constructor
+
+            Args:
+                time_limit          Maximum amount of time (in minutes) to search until terminating
+        """
+        self.time_limit = time_limit
+
     def dfs(self, limit):
         graph = RCGraph()
         """ Performs a depth-first search on the given graph
@@ -42,7 +50,7 @@ class Solver:
 
             # If we reach our limit, then terminate and return the node
             if count >= limit:
-                return Node(node.rubiks_cube, node.mov, -1)
+                return Node(node.rubiks_cube, node.mov)
 
             # Generate successor states (i.e. neighbours for the given node)
             nodes = graph.generate_adjacents(node)
@@ -52,7 +60,7 @@ class Solver:
 
         return None
 
-    def bfs(self, offset, target, time_limit):
+    def bfs(self, offset, target):
         """ Performs a breadth-first search on the given graph, starting at the
             given offset node. The search terminates until either the target node is reached,
             or until the time limit is reached.
@@ -60,7 +68,6 @@ class Solver:
             Args:
                 offset              The offset node on which to start with the breadth-first search
                 target              The target node to reach
-                time_limit          Maximum amount of time (in minutes) to search until terminating
         """
         graph = RCGraph(offset)
         # Queue for performing the bfs traversal
@@ -82,7 +89,7 @@ class Solver:
             elapsed = elapsed / 60.0
 
             # Terminate if time limit is reached
-            if elapsed >= time_limit:
+            if elapsed >= self.time_limit:
                 return node
 
             # Generate successor states (i.e. neighbours for the given node)
