@@ -1,10 +1,11 @@
 from cube import rubiks_cube
 from cube import move_rubiks_cube
+from blist import blist
 
 
 class Node(object):
 
-    def __init__(self, rubiks_cube, mov, parent_mov):
+    def __init__(self, rubiks_cube, mov, parent_mov=-1):
         """ Constructor
 
             Args:
@@ -29,12 +30,13 @@ class RCGraph(object):
             Args:
                 root        The graph's root node. Optional.
         """
-        self._graph = list()
+        self._graph = dict()
+        # self._graph.fromkeys((range(4000000)))
         if root:
             self.root = root
         else:
             self.root = Node(rubiks_cube(), -1, -1)
-        self._graph.append(self.root)
+        self._graph[str(self.root)] = True
 
     def generate_adjacents(self, node):
         """ Returns the node adjacent list
@@ -46,11 +48,14 @@ class RCGraph(object):
             Return:
                 List of adjacent nodes.
         """
-        nodes = filter(lambda node: not node in self._graph,
+        nodes = filter(lambda node: not self._has_node(node),
                        self._get_adjacents(node))
 
-        self._graph.append(nodes)
+        self._graph[str(nodes)] = True
         return nodes
+
+    def _has_node(self, node):
+        return self._graph.get(str(node), False)
 
     def _get_adjacents(self, node):
         """ Returns a possible list of adjacents. Checks whether state is
