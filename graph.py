@@ -1,6 +1,5 @@
 from cube import rubiks_cube
 from cube import move_rubiks_cube
-from blist import blist
 
 
 class Node(object):
