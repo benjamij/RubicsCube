@@ -30,7 +30,7 @@ class RCGraph(object):
                 root        The graph's root node. Optional.
         """
         self._graph = dict()
-        # self._graph.fromkeys((range(4000000)))
+
         if root:
             self.root = root
         else:
@@ -54,6 +54,15 @@ class RCGraph(object):
         return nodes
 
     def _has_node(self, node):
+        """ Checks whether the graph already contains the given node.
+
+            Args:
+                node    The node whose existence to determine
+
+            Return:
+                True if the graph contains the given node; false if not.
+
+        """
         return self._graph.get(str(node), False)
 
     def _get_adjacents(self, node):
